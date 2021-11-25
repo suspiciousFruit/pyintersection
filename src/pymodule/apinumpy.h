@@ -47,9 +47,13 @@ auto __intersect(const ntpoint3d* a, size_t asize, const ntpoint3d* b, size_t bs
 	Intersector3d<NumpyTreeAdapter> intersector(2);
 	const auto res = intersector.intersect(apoints, bpoints, 0.5);
 
-	for (const auto& r : res)
-		std::cout << r << std::endl;
-
+	for (const auto& r : res) {
+		// std::cout << r << std::endl;
+		const auto pts = r.apoints;
+		for (const auto& p : pts)
+			std::cout << p.getpoint() << std::endl;
+	}
+	// res === std::vector<collision3d<IteratorT>>
 	return res;
 }
 
@@ -87,6 +91,54 @@ auto __intersect(const ntpoint3d* a, size_t asize, const ntpoint3d* b, size_t bs
 // 		const auto& col = collisions[i];
 
 // 	}
+// }
+
+// PyObject* PyArray_SimpleNew(int nd, npy_intp* dims, int typenum);
+
+size_t get_points_count(const std::vector<collision3d<ntpoint_iterator>>& collisions) {
+	size_t res = 0;
+	for (const auto& col : collisions)
+		res += col.apoints.size() + col.bpoints.size();
+	return res;
+}
+
+// namespace np {	
+// 	PyArrayObject* getPoints(const std::vector<collision3d<ntpoint_iterator>>& collisions) {
+// 		const double pointsCount = get_points_count(collisions);
+
+// 	}
+// }
+
+// struct IPoint {
+// 	double cid;
+// 	double m;
+// 	double n;
+// 	double t;
+// 	point3d p;
+// };
+
+// void convertData(const std::vector<collision3d<ntpoint_iterator>>& collisions) {
+// 	const double pointsCount = get_points_count(collisions);
+// 	const npy_intp fieldsNumber = 7;
+// 	npy_intp dims[] = { pointsCount, fieldsNumber };
+
+// 	PyArrayObject* nparray = (PyArrayObject*)PyArray_SimpleNew(2, dims, NPY_DOUBLE);
+// 	for (size_t i = 0; i < collisions.size(); ++i) {
+// 		const auto& col = collisions[i];
+
+// 		const auto& points = col.apoints;
+// 		size_t j = 0;
+// 		for (; j < points.size(); ++j) {
+// 			IPoint& p = ((IPoint*)nparray->data)[j];
+// 			p.cid = i;
+// 			p.m = 0;
+// 			p.n = getnumber();
+// 			p.t = gett();
+// 			p.p = getpoint();
+// 		}
+
+// 	}
+
 // }
 
 PyArrayObject* intersect(PyArrayObject* a, PyArrayObject* b)
