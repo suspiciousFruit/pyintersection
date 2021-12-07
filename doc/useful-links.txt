@@ -1,0 +1,2 @@
+Numpy api: https://docs.scipy.org/doc/numpy-1.13.0/reference/c-api.array.html
+Python api: https://docs.python.org/3/c-api/arg.html

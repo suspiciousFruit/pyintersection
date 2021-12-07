@@ -1,5 +1,6 @@
 import pymodule
 import numpy as np
+from testutils import *
 
 a = np.array([
 	[1, 0.0, 1, 2, 3],
@@ -15,5 +16,6 @@ b = np.array([
 	[4, 0.3, 1, 2, 5],
 ])
 
-
-print(pymodule.intersect3d(a, b))
+cubes, points = pymodule.intersect3d(a, b, 0.5)
+#print(cubes, points)
+print (test_point_in_some_cube(cubes, points))

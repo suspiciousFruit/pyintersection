@@ -13,35 +13,22 @@
 PyObject* intersect3d(PyObject* self, PyObject* args)
 {
 	PyArrayObject* a_ndarray, *b_ndarray;
+	double precision;
 
-	PyArg_ParseTuple(args, "O!O!", &PyArray_Type, &a_ndarray, &PyArray_Type, &b_ndarray);
+	PyArg_ParseTuple(args, "O!O!d", &PyArray_Type, &a_ndarray, &PyArray_Type, &b_ndarray, &precision);
 
-	if (check_np_array3d(a_ndarray) && check_np_array3d(b_ndarray))
-		return (PyObject*)intersect(a_ndarray, b_ndarray);
-
-	return Py_None;
-}
-
-
-
-PyObject* test(PyObject* self, PyObject* tuple_with_lists)
-{
-	const auto a_list = PyTuple_GetItem(tuple_with_lists, 0);
-	const auto b_list = PyTuple_GetItem(tuple_with_lists, 1);
-	//const auto a_points = points_from_list(a_list);
-	//const auto b_points = points_from_list(b_list);
-	/*for (const auto& a : a_points)
-		std::cout << a << ' ';
-	std::cout << std::endl;
-	for (const auto& a : b_points)
-		std::cout << a << ' ';*/
-	//Intersector3d<std::vector<point3d>> intersector(2);
-	//const auto& res = intersector.intersect(a_points, b_points, 0.2);
-	//for (const auto& r : res)
-	//	std::cout << r << std::endl;
+	if (npApi::checkArray3d(a_ndarray) && npApi::checkArray3d(b_ndarray)) {
+		auto [cubes, points] = npApi::intersect3d(
+			npApi::TreeAdapter(a_ndarray),
+			npApi::TreeAdapter(b_ndarray),
+			precision);
+		return Py_BuildValue("OO", cubes, points);
+	}
 
 	return Py_None;
 }
+
+PyObject* test(PyObject* self, PyObject* arg) { return Py_None; }
 
 static PyMethodDef pymodule_methods[] = {
 	// The first property is the name exposed to Python, fast_tanh, the second is the C++
@@ -54,10 +41,10 @@ static PyMethodDef pymodule_methods[] = {
 
 static PyModuleDef pymodule_module = {
 	PyModuleDef_HEAD_INIT,
-	"superfastcode",                        // Module name to use with Python import statements
-	"intersections module",  // Module description
+	"superfastcode", // Module name to use with Python import statements
+	"intersections module", // Module description
 	0,
-	pymodule_methods                   // Structure that defines the methods of the module
+	pymodule_methods // Structure that defines the methods of the module
 };
 
 PyMODINIT_FUNC PyInit_pymodule() {
