@@ -4,3 +4,4 @@ __pycache__
 build
 dist
 pyintersection.egg-info
+.ipynb_checkpoints
