@@ -93,12 +93,12 @@ namespace npApi {
 			const auto& apoints = col.apoints;
 			for (size_t j = 0; j < apoints.size(); ++j, ++n) {
 				const auto it = apoints[j];
-				((IPoint*)nparray->data)[n] = { i, 0, it.getnumber(), it.gett(), it.getpoint() };
+				((IPoint*)nparray->data)[n] = { (double)i, 0, it.getnumber(), it.gett(), it.getpoint() };
 			}
 			const auto& bpoints = col.bpoints;
 			for (size_t j = 0; j < bpoints.size(); ++j, ++n) {
 				const auto it = bpoints[j];
-				((IPoint*)nparray->data)[n] = { i, 1, it.getnumber(), it.gett(), it.getpoint() };
+				((IPoint*)nparray->data)[n] = { (double)i, 1, it.getnumber(), it.gett(), it.getpoint() };
 			}
 		}
 		return nparray;
@@ -119,7 +119,7 @@ namespace npApi {
 
 		PyArrayObject* nparray = (PyArrayObject*)PyArray_SimpleNew(2, dims, NPY_DOUBLE);
 		for (size_t i = 0; i < collisions.size(); ++i)
-			((ICube*)nparray->data)[i] = { i, collisions[i].cube };
+			((ICube*)nparray->data)[i] = { (double)i, collisions[i].cube };
 		return nparray;
 	}
 

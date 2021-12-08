@@ -1,1 +1,5 @@
 *.so
+__pycache__
+build
+dist
+pyintersection.egg-info

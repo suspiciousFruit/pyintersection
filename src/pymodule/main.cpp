@@ -30,7 +30,7 @@ PyObject* intersect3d(PyObject* self, PyObject* args)
 
 PyObject* test(PyObject* self, PyObject* arg) { return Py_None; }
 
-static PyMethodDef pymodule_methods[] = {
+static PyMethodDef pyintersection_methods[] = {
 	// The first property is the name exposed to Python, fast_tanh, the second is the C++
 	// function name that contains the implementation.
 	{"test", (PyCFunction)test, METH_O, nullptr},
@@ -39,17 +39,17 @@ static PyMethodDef pymodule_methods[] = {
 	{ nullptr, nullptr, 0, nullptr }
 };
 
-static PyModuleDef pymodule_module = {
+static PyModuleDef pyintersection_module = {
 	PyModuleDef_HEAD_INIT,
-	"superfastcode", // Module name to use with Python import statements
+	"pyintersection", // Module name to use with Python import statements
 	"intersections module", // Module description
 	0,
-	pymodule_methods // Structure that defines the methods of the module
+	pyintersection_methods // Structure that defines the methods of the module
 };
 
-PyMODINIT_FUNC PyInit_pymodule() {
+PyMODINIT_FUNC PyInit_pyintersection() {
 	import_array();
-	return PyModule_Create(&pymodule_module);
+	return PyModule_Create(&pyintersection_module);
 }
 
 
