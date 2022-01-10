@@ -17,9 +17,12 @@
 // Calculate iteration number for octree
 size_t calculate_iteration_number(double precision, const cube3d& base, size_t depth)
 {
-	const double sievesx = std::log2((base.x_up - base.x_down) / precision);
-	const double sievesy = std::log2((base.y_up - base.y_down) / precision);
-	const double sievesz = std::log2((base.z_up - base.z_down) / precision);
+	const double xdiff = base.x_up - base.x_down;
+	const double ydiff = base.y_up - base.y_down;
+	const double zdiff = base.z_up - base.z_down;
+	const double sievesx = xdiff > precision ? std::log2((base.x_up - base.x_down) / precision) : 0;
+	const double sievesy = ydiff > precision ? std::log2((base.y_up - base.y_down) / precision) : 0;
+	const double sievesz = zdiff > precision ? std::log2((base.z_up - base.z_down) / precision) : 0;
 
 	return (size_t)std::ceil(std::max({ sievesx, sievesy, sievesz }) / depth);
 }
@@ -106,10 +109,12 @@ private:
 		// std::cout << "Need iterations: " << number_of_iterations << std::endl;
 		// ������ ������ ������
 		make_first_iteration();
-
 		// ������� ���������� ������� ������
 		tree_.clean_buffers();
-
+		if (number_of_iterations == -1) {
+			printf("Error: Iteration number is -1.");
+			return { };
+		}
 		for (size_t i = 1; i < number_of_iterations; ++i)
 		{
 			// ������ ��������
@@ -135,7 +140,6 @@ public:
 		tree_.update_cube(get_boundary_cube3d(a, b));
 		const size_t it_num = calculate_iteration_number(
 			precision, tree_.get_cube(), tree_.get_depth());
-
 		// ���� �� ����� ��������� � ��������� ������?
 		apoints_ = &a;
 		bpoints_ = &b;

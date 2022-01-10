@@ -25,10 +25,10 @@ struct collision6d
 
 		st << "apoints:" << std::endl;
 		for (auto p : p.apoints)
-			std::cout << "    " << *p << std::endl;
+			std::cout << "    " << p.ntpoint()  << std::endl;
 		st << "bpoints:" << std::endl;
 		for (auto p : p.bpoints)
-			std::cout << "    " << *p << std::endl;
+			std::cout << "    " << p.ntpoint() << std::endl;
 
 		return st;
 	}

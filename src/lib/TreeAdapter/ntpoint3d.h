@@ -94,6 +94,10 @@ public:
 		return base_->point;
 	}
 
+	inline const ntpoint3d& ntpoint() const {
+		return *base_;
+	}
+
 	friend std::ostream& operator<< (std::ostream& stream, const ntpoint_iterator it)
 	{
 		const char del = ',';

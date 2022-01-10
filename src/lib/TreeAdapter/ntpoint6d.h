@@ -105,4 +105,8 @@ public:
 		s << *(p.iterator_r_);
 		return s;
 	}
+
+	inline const ntpoint6d& ntpoint() const {
+		return *iterator_r_->base_;
+	}
 };

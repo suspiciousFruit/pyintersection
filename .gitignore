@@ -1,7 +1,8 @@
 *.so
 *.pyd
-__pycache__
+**/__pycache__
 build
 dist
 pyintersection.egg-info
-.ipynb_checkpoints
+*.ipynb_checkpoints
+vsproject

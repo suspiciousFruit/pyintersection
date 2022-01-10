@@ -1,8 +1,11 @@
 #pragma once
 #include "npoint3d.h"
 #include "ntpoint3d.h"
-// #include "ntpoint6d.h"
+ #include "ntpoint6d.h"
 #include <vector>
+
+#include "TreeAdapter3d.h"
+#include "TreeAdapter6d.h"
 
 
 
@@ -69,60 +72,3 @@ public:
 };
 
 typedef TreeAdapter<std::vector<npoint3d>> VectorAdapter;
-
-// template <>
-// class TreeAdapter<std::vector<ntpoint6d>>
-// {
-// public:
-// 	class VelocityAdapter
-// 	{
-// 	private:
-// 		const ntpoint6d_iterator_r* data_;
-// 		size_t size_;
-// 	public:
-// 		typedef ntpoint6d_iterator_v const_iterator;
-
-// 		VelocityAdapter(const std::vector<ntpoint6d_iterator_r>& vec) :
-// 			data_(vec.data()), size_(vec.size())
-// 		{ }
-
-// 		VelocityAdapter() : data_(nullptr), size_(0)
-// 		{ }
-
-// 		ntpoint6d_iterator_v begin() const
-// 		{
-// 			return ntpoint6d_iterator_v(data_);
-// 		}
-
-// 		ntpoint6d_iterator_v end() const
-// 		{
-// 			return ntpoint6d_iterator_v(data_ + size_);
-// 		}
-// 	};
-
-// 	class SpaceAdapter
-// 	{
-// 	private:
-// 		const ntpoint6d* data_;
-// 		size_t size_;
-// 	public:
-// 		typedef ntpoint6d_iterator_r const_iterator;
-
-// 		SpaceAdapter(const std::vector<ntpoint6d>& vec) :
-// 			data_(vec.data()), size_(vec.size())
-// 		{ }
-
-// 		SpaceAdapter() : data_(nullptr), size_(0)
-// 		{ }
-
-// 		ntpoint6d_iterator_r begin() const
-// 		{
-// 			return ntpoint6d_iterator_r(data_);
-// 		}
-
-// 		ntpoint6d_iterator_r end() const
-// 		{
-// 			return ntpoint6d_iterator_r(data_ + size_);
-// 		}
-// 	};
-// };
