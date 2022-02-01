@@ -18,10 +18,6 @@ PyObject* intersect3d(PyObject* self, PyObject* args)
 	PyArg_ParseTuple(args, "O!O!d", &PyArray_Type, &a_ndarray, &PyArray_Type, &b_ndarray, &precision);
 
 	if (npApi::checkArray3d(a_ndarray) && npApi::checkArray3d(b_ndarray)) {
-		// auto [cubes, points] = npApi::intersect3d(
-		// 	npApi::TreeAdapter(a_ndarray),
-		// 	npApi::TreeAdapter(b_ndarray),
-		// 	precision);
 		auto [cubes, points] = npApi::intersect3d(
 			npApi::makeAdapter3d(a_ndarray),
 			npApi::makeAdapter3d(b_ndarray),

@@ -1,5 +1,6 @@
-import pyintersection as pyi
 import numpy as np
+import pyintersection as pyi
+import utils
 
 a6d = np.array([
     [3, 3, 1, 1, 0.9, 3, 3, 3],
@@ -26,8 +27,13 @@ b6d = np.array([
 ])
 
 cubes, points = pyi.intersect6d(a6d, b6d, 0.5)
-print('points:\n', points)
-print('cubes\n', cubes)
+
+
+def run():
+    print('RUNNING TEST FOR pyintersection.intersect6d')
+    tests = utils.Tests(dims=6)
+    cubes, points = pyi.intersect6d(a6d, b6d, 0.5)
+    tests.run(cubes, points, (a6d, b6d))
 
 
 
