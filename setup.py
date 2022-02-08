@@ -1,6 +1,6 @@
 # The script that will build the module
 # from distutils.core import setup, Extension
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
 import sysconfig
 import sys
 import os.path as path
@@ -28,12 +28,12 @@ def get_extra_compile_args():
     return ['/std:c++17'] if sys.platform == 'win32' else ['-std=c++17']
 
 
-PYTHON_INCLUDE, NUMPY_INCLUDE = get_include_dirs()
+PYTHON_INCLUDE, NUMPY_INCLUDE = get_include_dirs() # numpy.get_include()
 EXTRA_COMPILE_ARGS = get_extra_compile_args()
 
 # Add extension to module
-module = Extension('pyintersection',
-                    sources = ['src/pymodule/main.cpp'],
+module = Extension('extmodule',
+                    sources = ['pyintersection/extmodule/main.cpp'],
                     include_dirs = [PYTHON_INCLUDE, NUMPY_INCLUDE],
                     extra_compile_args = EXTRA_COMPILE_ARGS)
 
@@ -41,4 +41,5 @@ module = Extension('pyintersection',
 setup(name = 'pyintersection',
         version = '1.0',
         description = 'Pyintersection package',
+        packages = find_packages(),
         ext_modules = [module])

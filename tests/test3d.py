@@ -16,6 +16,28 @@ b3d = np.array([
 	[4, 0.3, 1, 2, 5],
 ])
 
+testcase = (
+	np.array([
+		[1, 1.0, 1, 1, 1]
+	]),
+	np.array([
+		[1, 1.0, 1, 1, 1]
+	]),
+	0.5
+)
+
+testcases = [
+	(
+		np.array([
+			[1, 1, 1, 1, 1.0],
+		]),
+		np.array([
+			[1, 1.0, 1, 1, 1],
+		]),
+		0.5
+	)
+]
+
 def run():
 	print('RUNNING TEST FOR pyintersection.intersect3d')
 	tests = utils.Tests(dims=3)

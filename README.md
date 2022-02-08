@@ -16,7 +16,7 @@ If ``numpy`` is installed, then first you need to clone the repository to your c
     
 Then go to the directory with the project:
 
-    cd pyintersecting
+    cd pyintersection
 
 And finally use the following command to install module:
 

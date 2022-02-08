@@ -46,27 +46,27 @@ PyObject* intersect6d(PyObject* self, PyObject* args) {
 
 PyObject* test(PyObject* self, PyObject* arg) { return Py_None; }
 
-static PyMethodDef pyintersection_methods[] = {
+static PyMethodDef extmodule_methods[] = {
 	// The first property is the name exposed to Python, fast_tanh, the second is the C++
 	// function name that contains the implementation.
 	{"test", (PyCFunction)test, METH_O, nullptr},
-	{ "intersect3d", (PyCFunction)intersect3d, METH_VARARGS, nullptr },
-	{ "intersect6d", (PyCFunction)intersect6d, METH_VARARGS, nullptr },
+	{ "__intersect3d", (PyCFunction)intersect3d, METH_VARARGS, nullptr },
+	{ "__intersect6d", (PyCFunction)intersect6d, METH_VARARGS, nullptr },
 	// Terminate the array with an object containing nulls.
 	{ nullptr, nullptr, 0, nullptr }
 };
 
-static PyModuleDef pyintersection_module = {
+static PyModuleDef extmodule_module = {
 	PyModuleDef_HEAD_INIT,
-	"pyintersection", // Module name to use with Python import statements
+	"extmodule", // Module name to use with Python import statements
 	"intersections module", // Module description
 	0,
-	pyintersection_methods // Structure that defines the methods of the module
+	extmodule_methods // Structure that defines the methods of the module
 };
 
-PyMODINIT_FUNC PyInit_pyintersection() {
+PyMODINIT_FUNC PyInit_extmodule() {
 	import_array();
-	return PyModule_Create(&pyintersection_module);
+	return PyModule_Create(&extmodule_module);
 }
 
 
