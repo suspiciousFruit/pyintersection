@@ -45,4 +45,15 @@ public:
 
 		return res;
 	}
+
+	// Work only after calling .intersect()
+	std::vector<double> get_real_precision(double target_tolerance) const
+	{
+		auto rtol = inter_r_.get_real_precision(target_tolerance);
+		const auto vtol = inter_v_.get_real_precision(target_tolerance);
+		
+		rtol.insert(rtol.end(), vtol.begin(), vtol.end());
+
+		return rtol;
+	}
 };

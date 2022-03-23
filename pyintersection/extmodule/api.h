@@ -4,7 +4,9 @@
 #include <arrayobject.h>
 
 #include "../lib/Intersector/Intersector.h"
-#include "../lib/TreeAdapter/TreeAdapter.h"
+
+#include "TreeAdapterNumpy3d.h"
+#include "TreeAdapterNumpy6d.h"
 
 #include <iostream>
 
@@ -86,66 +88,61 @@ namespace npApi {
 		return nparray;
 	}
 
-	TreeAdapter6d makeAdapter6d(PyArrayObject* ndarray) {
-		return TreeAdapter6d((const ntpoint6d*)ndarray->data, ndarray->dimensions[0]);
+	PyArrayObject* toNdarray(const std::vector<double>& tols) {
+		npy_intp dims[] = { tols.size() };
+		PyArrayObject* ndarray = (PyArrayObject*)PyArray_SimpleNew(1, dims, NPY_DOUBLE);
+
+		for (size_t i = 0; i < tols.size(); ++i)
+			((double*)ndarray->data)[i] = tols[i];
+
+		return ndarray;
 	}
 
-    TreeAdapter3d makeAdapter3d(PyArrayObject* ndarray) {
-        return TreeAdapter3d((const ntpoint3d*)ndarray->data, ndarray->dimensions[0]);
+	PyArrayObject* toNdarray(const double* data, size_t size) {
+		npy_intp dims[] = { size };
+		PyArrayObject* ndarray = (PyArrayObject*)PyArray_SimpleNew(1, dims, NPY_DOUBLE);
+
+		for (size_t i = 0; i < size; ++i)
+			((double*)ndarray->data)[i] = data[i];
+
+		return ndarray;
+	}
+
+	TreeAdapterNumpy6d makeAdapter6d(PyArrayObject* ndarray) {
+		return TreeAdapterNumpy6d(ndarray);
+	}
+
+    TreeAdapterNumpy3d makeAdapter3d(PyArrayObject* ndarray) {
+        return TreeAdapterNumpy3d(ndarray);
     }
 
-    auto intersect3d(const TreeAdapter3d& a, const TreeAdapter3d& b,
-					double tolerance, size_t treeDepth = 2) {
-		Intersector3d<TreeAdapter3d> intersector(treeDepth);
+    auto intersect3d(const TreeAdapterNumpy3d& a, const TreeAdapterNumpy3d& b,
+					double tolerance, size_t treeDepth) {
+
+		Intersector3d<TreeAdapterNumpy3d> intersector(treeDepth);
 		const auto collisions = intersector.intersect(a, b, tolerance); // std::vector<collision3d<IteratorT>>
+		const auto tols = intersector.get_real_precision(tolerance);
+		PyArrayObject* npTols = npApi::toNdarray(tols);
 		PyArrayObject* npPoints = npApi::toPoints<ntpoint3d>(collisions);
 		PyArrayObject* npCubes = npApi::toCubes<cube3d>(collisions);
-		return std::make_tuple(npCubes, npPoints);
+		return std::make_tuple(npCubes, npPoints, npTols);
 	}
 
-    auto intersect6d(const TreeAdapter6d& a, const TreeAdapter6d& b,
-                    double tolerance, size_t treeDepth = 2) {
-        Intersector6d<TreeAdapter6d> intersector(treeDepth);
+    auto intersect6d(const TreeAdapterNumpy6d& a, const TreeAdapterNumpy6d& b,
+                    double tolerance, size_t treeDepth) {
+
+        Intersector6d<TreeAdapterNumpy6d> intersector(treeDepth);
 		const auto collisions = intersector.intersect(a, b, tolerance, tolerance); // std::vector<collision6d<IteratorT>>
+		const auto tols = intersector.get_real_precision(tolerance);
+		PyArrayObject* npTols = npApi::toNdarray(tols);
 		PyArrayObject* npPoints = npApi::toPoints<ntpoint6d>(collisions);
 		PyArrayObject* npCubes = npApi::toCubes<cube6d>(collisions);
-		return std::make_tuple(npCubes, npPoints);
+		return std::make_tuple(npCubes, npPoints, npTols);
     }
-}
 
-namespace npApi {
-		// struct IPoint {
-	// 	double cid;
-	// 	double m;
-	// 	double n;
-	// 	double t;
-	// 	point3d p;
+	PyArrayObject* get_boundary_cube3d(const TreeAdapterNumpy3d& a, const TreeAdapterNumpy3d& b) {
+		const auto cube = ::get_boundary_cube3d(a, b);
 
-	// 	OutPoint(double cid_, double m_, double n_, double t_, const point3d& p_)
-	// 		: cid(cid_), m(m_), n(n_), t(t_), p(p_) {}
-	// };
-
-	// PyArrayObject* toPoints3d(const std::vector<collision3d<ntpoint_iterator>>& collisions) {
-	// 	const size_t pointsCount = getPointsCount(collisions);
-	// 	const npy_intp fieldsNumber = 7;
-	// 	npy_intp dims[] = { pointsCount, fieldsNumber };
-	// 	// PyObject* PyArray_SimpleNew(int nd, npy_intp* dims, int typenum);
-	// 	PyArrayObject* nparray = (PyArrayObject*)PyArray_SimpleNew(2, dims, NPY_DOUBLE);
-	// 	size_t n = 0;
-	// 	for (size_t i = 0; i < collisions.size(); ++i) {
-	// 		const auto& col = collisions[i];
-
-	// 		const auto& apoints = col.apoints;
-	// 		for (size_t j = 0; j < apoints.size(); ++j, ++n) {
-	// 			const auto it = apoints[j];
-	// 			((IPoint*)nparray->data)[n] = { (double)i, 0, it.getnumber(), it.gett(), it.getpoint() };
-	// 		}
-	// 		const auto& bpoints = col.bpoints;
-	// 		for (size_t j = 0; j < bpoints.size(); ++j, ++n) {
-	// 			const auto it = bpoints[j];
-	// 			((IPoint*)nparray->data)[n] = { (double)i, 1, it.getnumber(), it.gett(), it.getpoint() };
-	// 		}
-	// 	}
-	// 	return nparray;
-	// }
+		return npApi::toNdarray(cube.data, 6);
+	}
 }

@@ -41,12 +41,15 @@ struct ntpoint6d
 
 class ntpoint6d_iterator_v;
 
+
+class ntpoint6d_iterator_v;
+
 // Iterator for space dimention
 class ntpoint6d_iterator_r
 {
 private:
-	friend class ntpoint6d_iterator_v;
-	const ntpoint6d* base_;
+	friend class ntpoint6d_iterator_v; // TODO remake with method data()
+	const ntpoint6d* base_; /// Ptr on current point 
 public:
 	ntpoint6d_iterator_r(const ntpoint6d* base) : base_(base)
 	{ }
@@ -59,7 +62,8 @@ public:
 	ntpoint6d_iterator_r& operator++ ()
 	{
 		++base_;
-		return *this;
+
+		return *this;    
 	}
 
 	bool operator!= (const ntpoint6d_iterator_r other)

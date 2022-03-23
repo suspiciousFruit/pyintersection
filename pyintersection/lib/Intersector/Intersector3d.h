@@ -137,9 +137,10 @@ public:
 	std::vector<collision3d<IteratorT>>&& intersect(const ArrayT& a, const ArrayT& b,
 		double precision)
 	{
-		tree_.update_cube(get_boundary_cube3d(a, b));
+		tree_.update_cube(::get_boundary_cube3d(a, b));
 		const size_t it_num = calculate_iteration_number(
 			precision, tree_.get_cube(), tree_.get_depth());
+			
 		// ���� �� ����� ��������� � ��������� ������?
 		apoints_ = &a;
 		bpoints_ = &b;
@@ -147,18 +148,18 @@ public:
 		return this->make_iterations(it_num);
 	}
 
-	// Work only after .intersect()
-	/*std::tuple<double, double, double> get_real_precision(double needed_precision) const
+	// Work only after calling .intersect()
+	std::vector<double> get_real_precision(double target_tolerance) const
 	{
-		const size_t it_num = get_iteration_number(needed_precision);
+		const size_t it_num = get_iteration_number(target_tolerance);
 		const cube3d& cube = tree_.get_cube();
 		const double depth = tree_.get_depth();
 
-		const double xprec = (cube.x_up - cube.x_down) / std::pow(2.0, it_num * depth);
-		const double yprec = (cube.y_up - cube.y_down) / std::pow(2.0, it_num * depth);
-		const double zprec = (cube.z_up - cube.z_down) / std::pow(2.0, it_num * depth);
+		const double xtol = (cube.x_up - cube.x_down) / std::pow(2.0, it_num * depth);
+		const double ytol = (cube.y_up - cube.y_down) / std::pow(2.0, it_num * depth);
+		const double ztol = (cube.z_up - cube.z_down) / std::pow(2.0, it_num * depth);
 
-		return { xprec, yprec, zprec };
-	}*/
+		return { xtol, ytol, ztol };
+	}
 };
 

@@ -10,19 +10,24 @@
 #include <arrayobject.h>
 #include "api.h"
 
+// PyArrayObject*, PyArrayObject*, atolerance, tree_depth
+// tree_iteration == 0 then tree calculate iterations automatic
+
 PyObject* intersect3d(PyObject* self, PyObject* args)
 {
 	PyArrayObject* a_ndarray, *b_ndarray;
-	double precision;
+	double atolerance;
+	size_t tree_depth;
 
-	PyArg_ParseTuple(args, "O!O!d", &PyArray_Type, &a_ndarray, &PyArray_Type, &b_ndarray, &precision);
+	PyArg_ParseTuple(args, "O!O!dI",
+		&PyArray_Type, &a_ndarray, &PyArray_Type, &b_ndarray, &atolerance, &tree_depth);
 
-	if (npApi::checkArray3d(a_ndarray) && npApi::checkArray3d(b_ndarray)) {
-		auto [cubes, points] = npApi::intersect3d(
+	if (npApi::checkArray3d(a_ndarray) && npApi::checkArray3d(b_ndarray) && tree_depth > 0) {
+		auto [cubes, points, tols] = npApi::intersect3d(
 			npApi::makeAdapter3d(a_ndarray),
 			npApi::makeAdapter3d(b_ndarray),
-			precision);
-		return Py_BuildValue("OO", cubes, points);
+			atolerance, tree_depth);
+		return Py_BuildValue("OOO", cubes, points, tols);
 	}
 
 	return Py_None;
@@ -30,28 +35,42 @@ PyObject* intersect3d(PyObject* self, PyObject* args)
 
 PyObject* intersect6d(PyObject* self, PyObject* args) {
 	PyArrayObject* a_ndarray, *b_ndarray;
-	double tolerance;
+	double atolerance;
+	size_t tree_depth;
 
-	PyArg_ParseTuple(args, "O!O!d", &PyArray_Type, &a_ndarray, &PyArray_Type, &b_ndarray, &tolerance);
+	PyArg_ParseTuple(args, "O!O!dI",
+		&PyArray_Type, &a_ndarray, &PyArray_Type, &b_ndarray, &atolerance, &tree_depth);
 
-	if (npApi::checkArray6d(a_ndarray) && npApi::checkArray6d(b_ndarray)) {
-		auto [cubes, points] = npApi::intersect6d(
+	if (npApi::checkArray6d(a_ndarray) && npApi::checkArray6d(b_ndarray)  && tree_depth > 0) {
+		auto [cubes, points, tols] = npApi::intersect6d(
 			npApi::makeAdapter6d(a_ndarray),
 			npApi::makeAdapter6d(b_ndarray),
-			tolerance);
-		return Py_BuildValue("OO", cubes, points);
+			atolerance, tree_depth);
+		return Py_BuildValue("OOO", cubes, points, tols);
 	}
 	return Py_None;
 }
 
-PyObject* test(PyObject* self, PyObject* arg) { return Py_None; }
+PyObject* get_boundary_cube3d(PyObject* self, PyObject* args) {
+	PyArrayObject* a_ndarray, *b_ndarray;
+
+	PyArg_ParseTuple(args, "O!O!", &PyArray_Type, &a_ndarray, &PyArray_Type, &b_ndarray);
+
+	if (npApi::checkArray3d(a_ndarray) && npApi::checkArray3d(b_ndarray)) {
+		auto cube = npApi::get_boundary_cube3d(npApi::makeAdapter3d(a_ndarray),
+			npApi::makeAdapter3d(b_ndarray));
+
+		return Py_BuildValue("O", cube); //
+	}
+	return Py_None;
+}
 
 static PyMethodDef extmodule_methods[] = {
 	// The first property is the name exposed to Python, fast_tanh, the second is the C++
 	// function name that contains the implementation.
-	{"test", (PyCFunction)test, METH_O, nullptr},
 	{ "__intersect3d", (PyCFunction)intersect3d, METH_VARARGS, nullptr },
 	{ "__intersect6d", (PyCFunction)intersect6d, METH_VARARGS, nullptr },
+	{ "__get_boundary_cube3d", (PyCFunction)get_boundary_cube3d, METH_VARARGS, nullptr },
 	// Terminate the array with an object containing nulls.
 	{ nullptr, nullptr, 0, nullptr }
 };
@@ -68,5 +87,4 @@ PyMODINIT_FUNC PyInit_extmodule() {
 	import_array();
 	return PyModule_Create(&extmodule_module);
 }
-
 
