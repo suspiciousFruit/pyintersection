@@ -80,10 +80,11 @@ axis = fig.add_subplot(111, projection='3d')
 axis.plot_surface(ax, ay, az, alpha=0.5)
 axis.plot_surface(bx, by, bz, alpha=0.5)
 plot_rpoints(axis, rpoints, c='deeppink', s=20)
-plt.show()
-
 
 # plot_mpoints(axis, a, c='g', s=30)
 # plot_mpoints(axis, b, c='b', s=30)
+
+plt.show()
+
 
 

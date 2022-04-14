@@ -41,5 +41,5 @@ testcases = [
 def run():
 	print('RUNNING TEST FOR pyintersection.intersect3d')
 	tests = utils.Tests(dims=3)
-	cubes, points = pyi.intersect3d(a3d, b3d, 0.5)
+	cubes, points, tols = pyi.intersect3d(a3d, b3d, 0.5)
 	tests.run(cubes, points, (a3d, b3d))
