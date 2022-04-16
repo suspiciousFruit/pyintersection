@@ -51,6 +51,24 @@ PyObject* intersect6d(PyObject* self, PyObject* args) {
 	return Py_None;
 }
 
+PyObject* intersect6d_ronly(PyObject* self, PyObject* args) {
+	PyArrayObject* a_ndarray, *b_ndarray;
+	double atolerance;
+	size_t tree_depth;
+
+	PyArg_ParseTuple(args, "O!O!dI",
+		&PyArray_Type, &a_ndarray, &PyArray_Type, &b_ndarray, &atolerance, &tree_depth);
+
+	if (npApi::checkArray6d(a_ndarray) && npApi::checkArray6d(b_ndarray)  && tree_depth > 0) {
+		auto [cubes, points, tols] = npApi::intersect6d_ronly(
+			npApi::makeAdapter6d(a_ndarray),
+			npApi::makeAdapter6d(b_ndarray),
+			atolerance, tree_depth);
+		return Py_BuildValue("OOO", cubes, points, tols);
+	}
+	return Py_None;
+}
+
 PyObject* get_boundary_cube3d(PyObject* self, PyObject* args) {
 	PyArrayObject* a_ndarray, *b_ndarray;
 

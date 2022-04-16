@@ -1,3 +1,10 @@
+Полезные ссылки
+----------
+
+Описание
+----------
+В процессе работы было
+
 Numpy api: https://docs.scipy.org/doc/numpy-1.13.0/reference/c-api.array.html
 Python api: https://docs.python.org/3/c-api/arg.html
 Build lib: https://docs.python.org/3/extending/extending.html#a-simple-example

@@ -39,6 +39,47 @@ def generate_new_points(rpoints, atol=None, agen=None, bgen=None):
     return ares, bres
 
 def optimize3d(a, b, target_atol=None, agen=None, bgen=None, max_iter=8):
+    """
+    optimize3d(apoints, bpoints, target_atol=None,
+            agen=None, bgen=None, max_iter=8)
+
+    Find intersections between two manifolds.
+
+    Parameters
+    ----------
+    apoints: (N, 5) numpy.ndarray
+        First manifold.
+    bpoints: (N, 5) numpy.ndarray
+        Second manifold.
+    target_atol: float > 0
+        Target optimize tolerance.
+    tree_depth: int > 0
+        Depth of sieve tree.
+
+    Returns
+    -------
+    rcubes: (N, 7) numpy.ndarray
+        Intersection cubes (ndarray): [cid, x_down, x_up, y_down, y_up, z_down, z_up].
+    points: (N, 7) numpy.ndarray
+        Intersection points (numpy.ndarray): [cid, m, n, t, x, y, z].
+    tols: (3,) numpy.ndarray
+        Tolerance by all axis: [x_tol, y_tol, z_tol].
+
+    Examples
+    --------
+    >>> import pyintersection as pyi
+    >>> import numpy as np
+    >>> apoints = np.array([[0, 0.0, 1, 1, 1], [1, 0.1, 1, 1, 2], [2, 0.2, 1, 1, 3]])
+    >>> bpoints = np.array([[0, 0.3, 1, 2, 2], [1, 0.4, 1, 1, 2], [2, 0.5, 1, 0, 2]])
+    >>> cubes, points, tols = pyi.intersect3d(apoints, bpoints, 0.5)
+    >>> print(cubes)
+        [[0.  1.  1.  1.  1.5 1.5 2. ]]
+    >>> print(points)
+        [[0.  0.  1.  0.1 1.  1.  2. ]
+        [0.  1.  1.  0.1 1.  1.  2. ]]
+    >>> print(tols)
+        [0.  0.5 0.5]
+    """
     atol = max(pyi.get_boundary_cube3d(a, b))
     for i in range(max_iter):
         rcubes, rpoints, atols = pyi.intersect3d(a, b, atol=atol/2)

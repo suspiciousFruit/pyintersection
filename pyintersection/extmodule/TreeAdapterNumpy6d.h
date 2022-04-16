@@ -48,9 +48,6 @@ private:
 	const ntpoint6d* base_;
     const size_t stride_; /// Offset in sizeof(double) bytes
 public:
-	// iterator_numpy_ntpoint6d_r(const ntpoint6d* base) : base_(base)
-	// { }
-
     iterator_numpy_ntpoint6d_r(const char* data, size_t stride) :
         base_((const ntpoint6d*)data), stride_(stride / sizeof(double))
     { }
@@ -69,6 +66,10 @@ public:
 
 	bool operator!= (const iterator_numpy_ntpoint6d_r other) {
 		return base_ != other.base_;
+	}
+
+	const ntpoint6d& ntpoint() const {
+		return *base_;
 	}
 
 	friend std::ostream& operator<< (std::ostream& s, const iterator_numpy_ntpoint6d_r it) {
@@ -105,7 +106,7 @@ public:
 		return s;
 	}
 
-	inline const ntpoint6d& ntpoint() const {
+	const ntpoint6d& ntpoint() const {
 		return *iterator_r_->base_;
 	}
 };

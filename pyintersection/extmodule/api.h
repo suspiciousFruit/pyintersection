@@ -140,6 +140,18 @@ namespace npApi {
 		return std::make_tuple(npCubes, npPoints, npTols);
     }
 
+    auto intersect6d_ronly(const TreeAdapterNumpy6d& a, const TreeAdapterNumpy6d& b,
+                    double tolerance, size_t treeDepth) {
+
+        Intersector6dRonly<TreeAdapterNumpy6d> intersector(treeDepth);
+		const auto collisions = intersector.intersect(a, b, tolerance); // std::vector<collision6d<IteratorT>>
+		const auto tols = intersector.get_real_precision(tolerance);
+		PyArrayObject* npTols = npApi::toNdarray(tols);
+		PyArrayObject* npPoints = npApi::toPoints<ntpoint6d>(collisions);
+		PyArrayObject* npCubes = npApi::toCubes<cube6d>(collisions);
+		return std::make_tuple(npCubes, npPoints, npTols);
+    }
+
 	PyArrayObject* get_boundary_cube3d(const TreeAdapterNumpy3d& a, const TreeAdapterNumpy3d& b) {
 		const auto cube = ::get_boundary_cube3d(a, b);
 
