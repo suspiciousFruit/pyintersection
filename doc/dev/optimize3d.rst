@@ -1,5 +1,4 @@
-pyintersection.optimize3d(apoints, bpoints, target_atol=None,
-        agen=None, bgen=None, max_iter=8, tree_depth=2)
+pyintersection.optimize3d(apoints, bpoints, target_atol=None, agen=None, bgen=None, max_iter=8, tree_depth=2)
 ----------
 Find intersections between two manifolds.
 
