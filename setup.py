@@ -37,9 +37,20 @@ module = Extension('extmodule',
                     include_dirs = [PYTHON_INCLUDE, NUMPY_INCLUDE],
                     extra_compile_args = EXTRA_COMPILE_ARGS)
 
+with open("README.md", "r") as file:
+    long_description = file.read()
+
 # Make setup
-setup(name = 'pyintersection',
-        version = '1.0',
-        description = 'Pyintersection package',
-        packages = find_packages(),
-        ext_modules = [module])
+setup(
+    name = 'pyintersection',
+    version = '1.1',
+    
+    description = 'Pyintersection package',
+    long_description=long_description,
+    url='https://github.com/suspiciousFruit/pyintersection',
+
+    packages = find_packages(),
+    ext_modules = [module],
+    install_requires=['numpy>=1.19.4'],
+    python_requires='>=3.7',
+)
